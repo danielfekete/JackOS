@@ -1,0 +1,21 @@
+class List{
+    field List next;
+    field int size;
+    field int data;
+
+    constructor List new(int aSize,List aNext){
+        let size = aSize;
+        let next= aNext;
+
+        return this;
+    }
+
+    method void dispose(){
+        if(~(next = null)){
+            do next.dispose();
+        }
+
+        do Memory.deAlloc(this);
+        return;
+    }
+}

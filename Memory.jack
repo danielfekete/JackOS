@@ -28,7 +28,7 @@ class Memory {
         let freeList = 2048;
         let freeList[NEXT] = 0;
         // Standard mapping 2048 - 16383
-        let freeList[SIZE] = 14335;
+        let freeList[SIZE] = 14333;
         // let block = 2048;
         // let block[NEXT] = 0;
         // let block[SIZE]=14355;
@@ -58,8 +58,8 @@ class Memory {
             let blockSize = current[SIZE];
             let next = current[NEXT];
             if((size + 2) < (blockSize + 1)){
-                if(~(size + 2) = blockSize){
-                    // // Perfect fit
+                if((size + 2) = blockSize){
+                    // Perfect fit
                     if(prev = 0){
                         // Update the head
                         let freeList = next;
@@ -67,16 +67,29 @@ class Memory {
                         // Remove current from the list
                         let prev[NEXT] = next;
                     }
-                    return current + 2;
+                    // Create the allocated block
+                    let allocatedBlock = current;
+                    let allocatedBlock[NEXT] = 0;
+                }else{
+                        // Create the allocated block
+                        let allocatedBlock = current;
+                        let allocatedBlock[SIZE] = size;
+                        let allocatedBlock[NEXT] = 0;
+
+                        // Update current
+                        let current = current + 2 + size;
+                        let current[NEXT] = next;
+                        let current[SIZE] = blockSize - size - 2;
+                    if(prev = 0){
+                        // Move the head
+                        let freeList = current;
+                    }else{
+                        // set prev next pointer to the new current address
+                        let prev[NEXT] = current;
+                    }
                 }
-                // Shrink the block to the correct size -> free space
-                let current[SIZE] = blockSize - size - 2;
 
-                let allocatedBlock= current + 2 + current[SIZE];
-                let allocatedBlock[NEXT] = 0;
-                let allocatedBlock[SIZE] = size;
-
-                return allocatedBlock;
+                return allocatedBlock + 2;
             }
             // Set previous to current
             let prev = current;
@@ -102,7 +115,7 @@ class Memory {
         // Set the block base address
         let current[NEXT] = baseAddress;
         // Set the block next block to 0
-        let baseAddress[1]= 0;
+        let baseAddress[NEXT]= 0;
 
         return;
     }    

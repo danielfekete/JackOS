@@ -371,6 +371,14 @@ pop that 0
 push constant 7000
 call Memory.alloc 1
 pop local 1
+push constant 8
+push local 4
+add
+push local 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
 push constant 0
 push local 4
 add

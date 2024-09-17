@@ -50,8 +50,12 @@ class Memory {
      *  a reference to its base address. */
     function int alloc(int size) {
         var int prev, current, next, blockSize, allocatedBlock;
+        var Array log;
+
+        let log = 17011;
 
         let current = freeList;
+        let log[0] = freeList;
         let prev = 0;
 
         while(~(current = 0)){
@@ -97,6 +101,8 @@ class Memory {
             let current = next;
         }
 
+       // TODO: defragmentation
+
         return 0;
     }
 
@@ -104,18 +110,16 @@ class Memory {
      *  it available for future allocations. */
     function void deAlloc(Array o) {
         var int baseAddress,current;
-        
         let baseAddress = o - 2;
         
         let current = freeList;
-        while(~(current = 0)){
+        while(~(current[NEXT] = 0)){
             let current = current[NEXT];
         }
-
         // Set the block base address
         let current[NEXT] = baseAddress;
         // Set the block next block to 0
-        let baseAddress[NEXT]= 0;
+        let baseAddress[NEXT] = 0;
 
         return;
     }    

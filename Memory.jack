@@ -14,18 +14,21 @@ class Memory {
     static Array freeList;
     // static Array block;
 
-    static int NEXT = 0;
-    static int SIZE = 1;
+    static int NEXT;
+    static int SIZE;
 
     /** Initializes the class. */
     function void init() {
         let ram = 0;
         let heap = 2048;
+        let NEXT = 0;
+        let SIZE = 1;
         let heap[NEXT] = 0; // next
         let heap[SIZE]= 14355; // heap size
         let freeList = 2048;
         let freeList[NEXT] = 0;
-        let freeList[SIZE] = 14355;
+        // Standard mapping 2048 - 16383
+        let freeList[SIZE] = 14335;
         // let block = 2048;
         // let block[NEXT] = 0;
         // let block[SIZE]=14355;
@@ -46,32 +49,34 @@ class Memory {
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. */
     function int alloc(int size) {
-        var int prev, current, next, blockSize;
+        var int prev, current, next, blockSize, allocatedBlock;
 
         let current = freeList;
         let prev = 0;
-        let next = freeList[NEXT];
 
-        while(~(current == 0)){
+        while(~(current = 0)){
             let blockSize = current[SIZE];
             let next = current[NEXT];
             if((size + 2) < (blockSize + 1)){
-                if((size + 2) == blockSize){
-                    // Perfect fit
-                    if(prev == 0){
+                if(~(size + 2) = blockSize){
+                    // // Perfect fit
+                    if(prev = 0){
                         // Update the head
                         let freeList = next;
                     }else{
                         // Remove current from the list
                         let prev[NEXT] = next;
                     }
-                    let current[0] = 0;
-                    return current + 2; 
+                    return current + 2;
                 }
                 // Shrink the block to the correct size -> free space
-                let current[SIZE] = blockSize - size;
+                let current[SIZE] = blockSize - size - 2;
 
-                return current + 2 + current[SIZE] + 2;
+                let allocatedBlock= current + 2 + current[SIZE];
+                let allocatedBlock[NEXT] = 0;
+                let allocatedBlock[SIZE] = size;
+
+                return allocatedBlock;
             }
             // Set previous to current
             let prev = current;
@@ -90,7 +95,7 @@ class Memory {
         let baseAddress = o - 2;
         
         let current = freeList;
-        while(~(current == 0)){
+        while(~(current = 0)){
             let current = current[NEXT];
         }
 
@@ -98,5 +103,7 @@ class Memory {
         let current[NEXT] = baseAddress;
         // Set the block next block to 0
         let baseAddress[1]= 0;
+
+        return;
     }    
 }
